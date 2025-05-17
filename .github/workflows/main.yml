@@ -40,17 +40,17 @@ jobs:
       # - name: Generate JSON SBOM
       #   uses: CycloneDX/gh-python-generate-sbom@v2
       - name: Install cyclonedx-bom
-        run: pip install cyclonedx-py
+        run: pip install cyclonedx-bom
       
       - name: Generate SBOM
         run: |
           if [ -f requirements.txt ]; then
-            cyclonedx-bom -r -i requirements.txt -o sbom.json --format json
+            cyclonedx-py -r -i requirements.txt -o sbom.json --format json
           elif [ -f poetry.lock ]; then
-            cyclonedx-bom -p -i poetry.lock -o sbom.json --format json
+            cyclonedx-py -p -i poetry.lock -o sbom.json --format json
           elif [ -f setup.py ]; then
             pip install .
-            cyclonedx-bom -e -o sbom.json --format json
+            cyclonedx-py -e -o sbom.json --format json
           else
             echo "No recognized dependency file found."
             exit 1
