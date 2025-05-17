@@ -45,15 +45,13 @@ jobs:
       - name: Generate SBOM
         run: |
           if [ -f requirements.txt ]; then
-            cyclonedx-py -r -i requirements.txt -o sbom.json --format json
+            cyclonedx-py requirements -i requirements.txt -o sbom.json
           elif [ -f poetry.lock ]; then
-            cyclonedx-py -p -i poetry.lock -o sbom.json --format json
-          elif [ -f setup.py ]; then
-            pip install .
-            cyclonedx-py -e -o sbom.json --format json
+            cyclonedx-py poetry -i poetry.lock -o sbom.json
+          elif [ -f Pipfile.lock ]; then
+            cyclonedx-py pipenv -i Pipfile.lock -o sbom.json
           else
-            echo "No recognized dependency file found."
-            exit 1
+            cyclonedx-py environment -o sbom.json
           fi
       - name: Upload SBOM files as artifact
         uses: actions/upload-artifact@v4
