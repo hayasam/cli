@@ -1,0 +1,33 @@
+language: python
+python:
+  - "3.10"
+
+addons:
+  sbom:
+    on:
+      branch: master
+    run_phase: after_success
+    output_format: cyclonedx-json
+
+install:
+  - |
+    if [ -f requirements.txt ]; then
+      echo "Installing from requirements.txt"
+      pip install --upgrade pip
+      pip install -r requirements.txt
+    elif [ -f setup.py ]; then
+      echo "Installing from setup.py"
+      pip install --upgrade pip
+      pip install .
+    elif [ -f pyproject.toml ]; then
+      echo "Installing from pyproject.toml"
+      pip install --upgrade pip
+      pip install build
+      python -m build
+      pip install dist/*.whl
+    else
+      echo "No known dependency file found (requirements.txt, setup.py, pyproject.toml)"
+      exit 1
+
+script:
+  - echo "Running tests or other build steps here"
