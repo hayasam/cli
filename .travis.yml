@@ -4,7 +4,7 @@ python:
 addons:
   sbom:
     on:
-      branch: master
+      branch: main
     run_phase: after_success
     output_format: cyclonedx-json
 
