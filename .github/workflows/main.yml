@@ -37,15 +37,34 @@ jobs:
             exit 1
           fi
           
-
-      - name: Install Syft
-        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
-
-      - name: Generate SBOM
-        run: syft dir:. --source-name myproject --source-version 1.0.0 -o cyclonedx-json > sbom.github.json
-
-
-      - uses: actions/upload-artifact@v4
+      - name: Generate JSON SBOM
+        uses: CycloneDX/gh-python-generate-sbom@v2
         with:
-          name: sbom-github
-          path: sbom.github.json
+          input: ./requirements.txt
+          output: ./hsbom.cdx.json
+          format: json
+          
+      - name: Upload SBOM files as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-files
+          path: |
+            hsbom.cdx.json
+          
+      - name: Commit SBOM to Repository
+        run: |
+          git config --local user.email "hayasam@najah.edu"
+          git config --local user.name "hayasam"
+          git add hsbom.cdx.json
+          git commit -m "Add SBOM"
+      # - name: Install Syft
+      #   run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      # - name: Generate SBOM
+      #   run: syft dir:. --source-name myproject --source-version 1.0.0 -o cyclonedx-json > sbom.github.json
+
+
+      # - uses: actions/upload-artifact@v4
+      #   with:
+      #     name: sbom-github
+      #     path: sbom.github.json
