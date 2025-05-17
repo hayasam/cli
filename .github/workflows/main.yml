@@ -58,13 +58,13 @@ jobs:
         with:
           name: sbom-files
           path: |
-            hsbom.cdx.json
+            sbom.json
           
       - name: Commit SBOM to Repository
         run: |
           git config --local user.email "hayasam@najah.edu"
           git config --local user.name "hayasam"
-          git add hsbom.cdx.json
+          git add sbom.json
           git commit -m "Add SBOM"
       # - name: Install Syft
       #   run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
