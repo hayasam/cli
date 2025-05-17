@@ -42,7 +42,8 @@ jobs:
         run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
 
       - name: Generate SBOM
-        run: syft scan dir:. -o cyclonedx-json > sbom.github.json
+        run: syft dir:. --source-name myproject --source-version 1.0.0 -o cyclonedx-json > sbom.github.json
+
 
       - uses: actions/upload-artifact@v4
         with:
