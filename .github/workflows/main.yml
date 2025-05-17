@@ -39,10 +39,21 @@ jobs:
           
       - name: Generate JSON SBOM
         uses: CycloneDX/gh-python-generate-sbom@v2
-        with:
-          input: ./requirements.txt
-          output: ./hsbom.cdx.json
-          format: json
+      - name: Install cyclonedx-bom
+        run: pip install cyclonedx-bom
+      
+      - name: Generate SBOM
+        run: |
+          if [ -f requirements.txt ]; then
+            cyclonedx-bom -r -i requirements.txt -o sbom.json --format json
+          elif [ -f poetry.lock ]; then
+            cyclonedx-bom -p -i poetry.lock -o sbom.json --format json
+          elif [ -f setup.py ]; then
+            pip install .
+            cyclonedx-bom -e -o sbom.json --format json
+          else
+            echo "No recognized dependency file found."
+            exit 1
           
       - name: Upload SBOM files as artifact
         uses: actions/upload-artifact@v4
