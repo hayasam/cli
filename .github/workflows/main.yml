@@ -40,7 +40,7 @@ jobs:
       # - name: Generate JSON SBOM
       #   uses: CycloneDX/gh-python-generate-sbom@v2
       - name: Install cyclonedx-bom
-        run: pip install cyclonedx-bom
+        run: pip install cyclonedx-py
       
       - name: Generate SBOM
         run: |
